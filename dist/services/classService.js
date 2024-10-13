@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createNewClass = void 0;
+exports.IsClassExist = exports.createNewClass = void 0;
 const classModel_js_1 = __importDefault(require("../models/classModel.js"));
 const createNewClass = (className) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -27,3 +27,20 @@ const createNewClass = (className) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.createNewClass = createNewClass;
+const getAllClasses = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const allClasses = yield classModel_js_1.default.find();
+        return allClasses;
+    }
+    catch (error) {
+        throw new Error(`Error fetching all classes: ${error.message}`);
+    }
+});
+const IsClassExist = (classToCheck) => __awaiter(void 0, void 0, void 0, function* () {
+    const existingClass = yield classModel_js_1.default.findOne({ name: classToCheck });
+    if (!existingClass) {
+        return null;
+    }
+    return existingClass.id;
+});
+exports.IsClassExist = IsClassExist;

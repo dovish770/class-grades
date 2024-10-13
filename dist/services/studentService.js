@@ -15,20 +15,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createNewStudent = void 0;
 const studentModel_js_1 = __importDefault(require("../models/studentModel.js"));
 const passwordService_js_1 = require("./passwordService.js");
+const classService_js_1 = require("./classService.js");
 const createNewStudent = (req) => __awaiter(void 0, void 0, void 0, function* () {
-    const { fullName, email, password } = req.body;
-    if (!fullName || !email || !password) {
+    const { fullName, email, password, className } = req.body;
+    if (!fullName || !email || !password || !className) {
         throw new Error('fields missing! must contain: fullName, email and password');
     }
     const hashedPassword = yield (0, passwordService_js_1.hashPassword)(password);
+    const classExists = yield (0, classService_js_1.IsClassExist)(className);
+    if (!classExists) {
+        throw new Error('Class does not exist');
+    }
     try {
         const newStudent = new studentModel_js_1.default({
             fullName,
             email,
             password: hashedPassword,
+            class: classExists
         });
         const savedStudent = yield newStudent.save();
-        return { student: savedStudent, message: 'Student created successfully! Please select a class.' };
+        return { student: savedStudent };
     }
     catch (error) {
         throw new Error(`Error creating new student: ${error.message}`);

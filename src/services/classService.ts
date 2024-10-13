@@ -14,3 +14,22 @@ export const createNewClass = async (className: string): Promise<IClass> => {
     }
 };
 
+const getAllClasses = async (): Promise<IClass[] | []> => {
+    try {
+        const allClasses = await Class.find();
+        return allClasses
+    } catch (error:any) {
+        throw new Error(`Error fetching all classes: ${error.message}`);
+    }
+};
+
+export const IsClassExist = async (classToCheck: string): Promise<string | null> => {
+    const existingClass = await Class.findOne({ name: classToCheck });
+
+    if (!existingClass) {
+        return null;
+    }
+
+    return existingClass.id
+};
+
