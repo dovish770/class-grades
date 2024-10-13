@@ -1,21 +1,23 @@
 import { Request } from 'express';
 import Teacher, { ITeacher } from '../models/teacherModel.js';
-import {hashPassword} from './passwordService.js'
+import { hashPassword } from './passwordService.js';
+import { createNewClass } from './classService.js';
 
 export const createNewTeacher = async (req: Request): Promise<ITeacher> => {
-    const { fullName, email, password, class: className } = req.body;
+    const { fullName, email, password, className } = req.body;
     
     if (!fullName || !email || !password || !className) {
         throw new Error('fields missing! must contain: fullName, email, password, and class name');
     }
 
-    const hashedPassword = await hashPassword(password)
+    const hashedPassword = await hashPassword(password);
+    const newClass = await createNewClass(className);
     try {
         const newTeacher = new Teacher({
             fullName,
             email,
-            hashedPassword,
-            class: className
+            password: hashedPassword,
+            class: newClass
         });
 
         const savedTeacher = await newTeacher.save();

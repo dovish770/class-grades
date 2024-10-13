@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const db_1 = __importDefault(require("./config/db"));
-const teacherRoutes_js_1 = __importDefault(require("../src/Routes/teacherRoutes.js"));
+const teacherRoutes_js_1 = __importDefault(require("./Routes/teacherRoutes.js"));
 // import { swaggerSpec } from "./swagger";
 dotenv_1.default.config();
 const app = (0, express_1.default)();

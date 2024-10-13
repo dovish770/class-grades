@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./config/db";
-import teacherRouter from '../src/Routes/teacherRoutes.js'
+import teacherRouter from "./Routes/teacherRoutes.js";
 import swaggerUi from 'swagger-ui-express'
 // import { swaggerSpec } from "./swagger";
 

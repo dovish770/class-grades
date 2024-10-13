@@ -15,18 +15,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createNewTeacher = void 0;
 const teacherModel_js_1 = __importDefault(require("../models/teacherModel.js"));
 const passwordService_js_1 = require("./passwordService.js");
+const classService_js_1 = require("./classService.js");
 const createNewTeacher = (req) => __awaiter(void 0, void 0, void 0, function* () {
-    const { fullName, email, password, class: className } = req.body;
+    const { fullName, email, password, className } = req.body;
     if (!fullName || !email || !password || !className) {
         throw new Error('fields missing! must contain: fullName, email, password, and class name');
     }
     const hashedPassword = yield (0, passwordService_js_1.hashPassword)(password);
+    const newClass = yield (0, classService_js_1.createNewClass)(className);
     try {
         const newTeacher = new teacherModel_js_1.default({
             fullName,
             email,
-            hashedPassword,
-            class: className
+            password: hashedPassword,
+            class: newClass
         });
         const savedTeacher = yield newTeacher.save();
         return savedTeacher;
