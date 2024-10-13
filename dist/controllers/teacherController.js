@@ -9,9 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.teacherLogin = exports.teacherRegister = void 0;
+exports.addGradeToStudent = exports.teacherLogin = exports.teacherRegister = void 0;
 const teacherService_js_1 = require("../services/teacherService.js");
 const passwordService_js_1 = require("../services/passwordService.js");
+const studentService_js_1 = require("../services/studentService.js");
+const gradeService_js_1 = require("../services/gradeService.js");
 const teacherRegister = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const newTeacher = yield (0, teacherService_js_1.createNewTeacher)(req);
@@ -47,3 +49,19 @@ const teacherLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.teacherLogin = teacherLogin;
+const addGradeToStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { studentId } = req.body.student;
+        const student = yield (0, studentService_js_1.getStudentById)(studentId);
+        if (!student) {
+            throw new Error('student was not found!');
+        }
+        const newGrade = (0, gradeService_js_1.createGradeAndPush)(req, student);
+        yield student.save();
+        res.status(200).json(student);
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Error adding grade', error: error.message });
+    }
+});
+exports.addGradeToStudent = addGradeToStudent;

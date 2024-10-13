@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStudent = exports.createNewStudent = void 0;
+exports.pushGradeToStudent = exports.getStudentById = exports.getStudentByEmail = exports.createNewStudent = void 0;
 const studentModel_js_1 = __importDefault(require("../models/studentModel.js"));
 const passwordService_js_1 = require("./passwordService.js");
 const classService_js_1 = require("./classService.js");
@@ -41,11 +41,26 @@ const createNewStudent = (req) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.createNewStudent = createNewStudent;
-const getStudent = (email) => __awaiter(void 0, void 0, void 0, function* () {
+const getStudentByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
     const student = yield studentModel_js_1.default.findOne({ email });
     if (!student) {
         return null;
     }
     return student;
 });
-exports.getStudent = getStudent;
+exports.getStudentByEmail = getStudentByEmail;
+const getStudentById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const student = yield studentModel_js_1.default.findById(id);
+    if (!student) {
+        return null;
+    }
+    return student;
+});
+exports.getStudentById = getStudentById;
+const pushGradeToStudent = (student, grade) => {
+    if (!student.grades) {
+        student.grades = [];
+    }
+    student.grades.push(grade);
+};
+exports.pushGradeToStudent = pushGradeToStudent;

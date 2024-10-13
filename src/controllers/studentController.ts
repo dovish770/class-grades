@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import {createNewStudent, getStudent} from '../services/studentService.js'
+import {createNewStudent, getStudentByEmail} from '../services/studentService.js'
 import {isPasswordCorrect} from '../services/passwordService.js'
 
 export const studentRegister = async (req: Request, res: Response) => {
@@ -21,7 +21,7 @@ export const studentRegister = async (req: Request, res: Response) => {
     }
   
     try{
-        const student = await getStudent(email)
+        const student = await getStudentByEmail(email)
         if(!student){
             res.status(404).json({message: "student not found."})
         }

@@ -28,7 +28,7 @@ const studentLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(400).json({ message: "email and password are required." });
     }
     try {
-        const student = yield (0, studentService_js_1.getStudent)(email);
+        const student = yield (0, studentService_js_1.getStudentByEmail)(email);
         if (!student) {
             res.status(404).json({ message: "student not found." });
         }

@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
 import {createNewTeacher, getTeacher } from '../services/teacherService.js'
 import {isPasswordCorrect} from '../services/passwordService.js'
+import {getStudentById} from '../services/studentService.js'
+import {createGradeAndPush} from '../services/gradeService.js'
+
 
 export const teacherRegister = async (req: Request, res: Response) => {
     try {
@@ -41,4 +44,25 @@ export const teacherLogin = async (req: Request, res: Response) => {
   }
 };
 
+
+export const addGradeToStudent = async (req: Request, res: Response) => {
+    try {
+        const { studentId } = req.body.student;
+
+        const student = await getStudentById(studentId)
+
+        if (!student) {
+            throw new Error('student was not found!');
+        } 
+        
+        const newGrade = createGradeAndPush(req, student)
+
+        await student.save();
+
+        res.status(200).json(student);
+        
+    } catch (error:any) {
+      res.status(500).json({ message: 'Error adding grade', error: error.message });
+    }
+  };
   
