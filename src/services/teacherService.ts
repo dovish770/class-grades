@@ -28,10 +28,21 @@ export const createNewTeacher = async (req: Request): Promise<ITeacher> => {
     }
 };
 
-export const getTeacher = async (email: string): Promise<ITeacher | null> => {
+export const getTeacherByEmail = async (email: string): Promise<ITeacher | null> => {
     const teacher = await Teacher.findOne({ email });
     if (!teacher) {
         return null;
     }
     return teacher;
 };
+
+export const getTeacherById = async (id: string): Promise<ITeacher | null> => {
+    try {
+        const teacher = await Teacher.findById(id).populate('class');
+        return teacher;
+    } catch (error) {
+        throw new Error('Could not find teacher');
+    }
+};
+
+

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import {createNewTeacher, getTeacher } from '../services/teacherService.js'
+import {createNewTeacher, getTeacherByEmail, getTeacherById } from '../services/teacherService.js'
 import {isPasswordCorrect} from '../services/passwordService.js'
-import {getStudentById} from '../services/studentService.js'
+import {getStudentById, getStudentsAndGrades} from '../services/studentService.js'
 import {createGradeAndPush} from '../services/gradeService.js'
 
 
@@ -25,7 +25,7 @@ export const teacherLogin = async (req: Request, res: Response) => {
   }
 
   try{
-      const teacher = await getTeacher(email)
+      const teacher = await getTeacherByEmail(email)
       if(!teacher){
           res.status(404).json({message: "teacher not found."})
       }
@@ -47,22 +47,48 @@ export const teacherLogin = async (req: Request, res: Response) => {
 
 export const addGradeToStudent = async (req: Request, res: Response) => {
     try {
-        const { studentId } = req.body.student;
-
-        const student = await getStudentById(studentId)
+        const { studentId } = req.body.studentId;
+        console.log( req.body.studentId);
+        
+        const student = await getStudentById(studentId);
 
         if (!student) {
-            throw new Error('student was not found!');
+            res.status(404).json({ message: 'Student was not found!' });
         } 
+        else{
+            const newGrade = await createGradeAndPush(req, student); 
+            await student.save();
+    
+            res.status(200).json(newGrade);
+        }
         
-        const newGrade = createGradeAndPush(req, student)
-
-        await student.save();
-
-        res.status(200).json(student);
-        
-    } catch (error:any) {
-      res.status(500).json({ message: 'Error adding grade', error: error.message });
+    } catch (error: any) {
+        res.status(500).json({ message: 'Error adding grade', error: error.message });
     }
-  };
+};
+
+
+export const getAllGrades = async (req: Request, res: Response) => {
+    try {
+        const teacher = await getTeacherById(req.params.id)
+        if (!teacher) {
+            throw new Error('Teacher not found');
+        }
+
+        const students = await getStudentsAndGrades(teacher.class.id)
+
+        if (!students) {
+            throw new Error('no students to show');
+        }
+
+        const grades = students.map(student => ({
+            fullName: student.fullName,
+            grades: student.grades,
+        }));
+
+        res.status(200).json(grades);
+    } catch (error:any) {
+        res.status(500).json({ message: 'Error fetching grades', error: error.message });
+    }
+};
   

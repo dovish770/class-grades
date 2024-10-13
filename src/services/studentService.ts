@@ -44,11 +44,13 @@ export const getStudentByEmail = async (email: string): Promise<IStudent | null>
 
 
 export const getStudentById = async (id: string): Promise<IStudent | null> => {
-    const student = await Student.findById(id);
-    if (!student) {
-        return null;
+    try {
+        const student = await Student.findById(id).populate('class').exec();
+        return student;
+    } catch (error:any) {
+        console.error(`Error finding student with ID ${id}:`, error.message);
+        throw new Error(`Error finding student: ${error.message}`);
     }
-    return student;
 };
 
 export const pushGradeToStudent = (student:IStudent, grade:IGrade) => {
@@ -58,5 +60,21 @@ export const pushGradeToStudent = (student:IStudent, grade:IGrade) => {
   
     student.grades.push(grade);
 }
+
+
+export const getStudentsAndGrades = async (classId: string): Promise<IStudent[] | null> => {
+    try {
+        const students = await Student.find({ class: classId }).populate('grades');
         
+        if (!students || students.length === 0) {
+            return null;
+        }
+        
+        return students; 
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+};
+   
 

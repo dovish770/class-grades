@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.pushGradeToStudent = exports.getStudentById = exports.getStudentByEmail = exports.createNewStudent = void 0;
+exports.getStudentsAndGrades = exports.pushGradeToStudent = exports.getStudentById = exports.getStudentByEmail = exports.createNewStudent = void 0;
 const studentModel_js_1 = __importDefault(require("../models/studentModel.js"));
 const passwordService_js_1 = require("./passwordService.js");
 const classService_js_1 = require("./classService.js");
@@ -50,11 +50,14 @@ const getStudentByEmail = (email) => __awaiter(void 0, void 0, void 0, function*
 });
 exports.getStudentByEmail = getStudentByEmail;
 const getStudentById = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const student = yield studentModel_js_1.default.findById(id);
-    if (!student) {
-        return null;
+    try {
+        const student = yield studentModel_js_1.default.findById(id).populate('class').exec();
+        return student;
     }
-    return student;
+    catch (error) {
+        console.error(`Error finding student with ID ${id}:`, error.message);
+        throw new Error(`Error finding student: ${error.message}`);
+    }
 });
 exports.getStudentById = getStudentById;
 const pushGradeToStudent = (student, grade) => {
@@ -64,3 +67,17 @@ const pushGradeToStudent = (student, grade) => {
     student.grades.push(grade);
 };
 exports.pushGradeToStudent = pushGradeToStudent;
+const getStudentsAndGrades = (classId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const students = yield studentModel_js_1.default.find({ class: classId }).populate('grades');
+        if (!students || students.length === 0) {
+            return null;
+        }
+        return students;
+    }
+    catch (error) {
+        console.error(error);
+        return null;
+    }
+});
+exports.getStudentsAndGrades = getStudentsAndGrades;
