@@ -1,15 +1,15 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
 import ClassSchema, { IClass } from '../models/classModel.js'
 
-export interface ITeacher extends Document {
+export interface IStudent extends Document {
     _id: Types.ObjectId;
     fullName: string;
     email: string;
     password: string
-    class: IClass
+    class?: Types.ObjectId;
 }
 
-const TeacherSchema = new Schema<ITeacher>({
+const StudentSchema = new Schema<IStudent>({
     fullName:{
       type: String,
       required: [true, "please enter your name"],
@@ -32,11 +32,11 @@ const TeacherSchema = new Schema<ITeacher>({
             'Password must contain at least one uppercase letter, one lowercase letter, and one number, and be at least 8 characters long']
     },
     class: {
-        type: ClassSchema,
-        required: true,
-        unique: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Class',
+        required: true
     }
   });
   
-  export default mongoose.model<ITeacher>("Teacher", TeacherSchema);
+  export default mongoose.model<IStudent>("Student", StudentSchema);
 

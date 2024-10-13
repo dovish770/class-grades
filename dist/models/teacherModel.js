@@ -22,9 +22,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
-const UserSchema = new mongoose_1.Schema({
+const classModel_js_1 = __importDefault(require("../models/classModel.js"));
+const TeacherSchema = new mongoose_1.Schema({
     fullName: {
         type: String,
         required: [true, "please enter your name"],
@@ -48,9 +52,9 @@ const UserSchema = new mongoose_1.Schema({
         ]
     },
     class: {
-        type: ClassSchema,
+        type: classModel_js_1.default,
         required: true,
-        unique: true
+        unique: true,
     }
 });
-exports.default = mongoose_1.default.model("User", UserSchema);
+exports.default = mongoose_1.default.model("Teacher", TeacherSchema);

@@ -24,18 +24,33 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
-const ClassSchema = new mongoose_1.Schema({
-    name: {
+const StudentSchema = new mongoose_1.Schema({
+    fullName: {
         type: String,
-        required: true,
-        minlength: 1,
-        maxlength: [20, 'class name too must contain not more then 20 characters'],
-        trim: true
+        required: [true, "please enter your name"],
+        maxlength: [50, 'name too long'],
+        match: [/^[a-zA-Z]+$/, 'invalid name']
     },
-    students: {
+    email: {
+        type: String,
+        required: [true, 'please enter email'],
+        unique: true,
+        match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'email is not valid']
+    },
+    password: {
+        unique: true,
+        required: [true, "please enter password"],
+        minlength: [8, 'password must contain at least 8 characters'],
+        maxlength: [20, 'password too long'],
+        match: [
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+            'Password must contain at least one uppercase letter, one lowercase letter, and one number, and be at least 8 characters long'
+        ]
+    },
+    class: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'Student',
-        default: []
+        ref: 'Class',
+        required: true
     }
 });
-exports.default = ClassSchema;
+exports.default = mongoose_1.default.model("Student", StudentSchema);
