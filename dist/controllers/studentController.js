@@ -9,8 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.studentRegister = void 0;
+exports.studentLogin = exports.studentRegister = void 0;
 const studentService_js_1 = require("../services/studentService.js");
+const passwordService_js_1 = require("../services/passwordService.js");
 const studentRegister = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const newStudent = yield (0, studentService_js_1.createNewStudent)(req);
@@ -21,3 +22,28 @@ const studentRegister = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.studentRegister = studentRegister;
+const studentLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password } = req.body;
+    if (!email || !password) {
+        res.status(400).json({ message: "email and password are required." });
+    }
+    try {
+        const student = yield (0, studentService_js_1.getStudent)(email);
+        if (!student) {
+            res.status(404).json({ message: "student not found." });
+        }
+        else {
+            const isPasswordValid = yield (0, passwordService_js_1.isPasswordCorrect)(password, student);
+            if (!isPasswordValid) {
+                res.status(400).json({ message: 'Password is incorrect!' });
+            }
+            else {
+                res.status(200).json({ message: "Login successful" });
+            }
+        }
+    }
+    catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+});
+exports.studentLogin = studentLogin;

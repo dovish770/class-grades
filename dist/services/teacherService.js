@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createNewTeacher = void 0;
+exports.getTeacher = exports.createNewTeacher = void 0;
 const teacherModel_js_1 = __importDefault(require("../models/teacherModel.js"));
 const passwordService_js_1 = require("./passwordService.js");
 const classService_js_1 = require("./classService.js");
@@ -38,3 +38,11 @@ const createNewTeacher = (req) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.createNewTeacher = createNewTeacher;
+const getTeacher = (email) => __awaiter(void 0, void 0, void 0, function* () {
+    const teacher = yield teacherModel_js_1.default.findOne({ email });
+    if (!teacher) {
+        return null;
+    }
+    return teacher;
+});
+exports.getTeacher = getTeacher;

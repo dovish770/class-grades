@@ -27,3 +27,11 @@ export const createNewTeacher = async (req: Request): Promise<ITeacher> => {
         throw new Error(`Error creating new teacher: ${error.message}`);
     }
 };
+
+export const getTeacher = async (email: string): Promise<ITeacher | null> => {
+    const teacher = await Teacher.findOne({ email });
+    if (!teacher) {
+        return null;
+    }
+    return teacher;
+};

@@ -32,3 +32,11 @@ export const createNewStudent = async (req: Request): Promise<{ student: IStuden
         throw new Error(`Error creating new student: ${error.message}`);
     }
 };
+
+export const getStudent = async (email: string): Promise<IStudent | null> => {
+    const student = await Student.findOne({ email });
+    if (!student) {
+        return null;
+    }
+    return student;
+};
