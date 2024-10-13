@@ -32,7 +32,7 @@ const StudentSchema = new Schema<IStudent>({
             'Password must contain at least one uppercase letter, one lowercase letter, and one number, and be at least 8 characters long']
     },
     class: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Types.ObjectId,
         ref: 'Class',
         required: true
     }

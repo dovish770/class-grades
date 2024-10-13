@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
-import { IStudent } from '../models/studentModel'
+import { IStudent } from '../models/studentModel.js'
 
 export interface IClass extends Document {
     _id: Types.ObjectId;
@@ -16,7 +16,7 @@ const ClassSchema: Schema<IClass> = new Schema<IClass>({
         trim: true
     },
     students: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: [Types.ObjectId],
         ref: 'Student',
         default: []
     }
