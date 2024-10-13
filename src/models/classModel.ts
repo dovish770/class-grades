@@ -23,3 +23,4 @@ const ClassSchema: Schema<IClass> = new Schema<IClass>({
 });
 
 export default mongoose.model<IClass>("Class", ClassSchema);
+export {ClassSchema};

@@ -24,12 +24,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
+const gardeModel_js_1 = require("../models/gardeModel.js");
 const StudentSchema = new mongoose_1.Schema({
     fullName: {
         type: String,
         required: [true, "please enter your name"],
         maxlength: [50, 'name too long'],
-        match: [/^[a-zA-Z]+$/, 'invalid name']
+        match: [/^[a-zA-Z\s]+$/, 'invalid name']
     },
     email: {
         type: String,
@@ -38,19 +39,13 @@ const StudentSchema = new mongoose_1.Schema({
         match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'email is not valid']
     },
     password: {
-        unique: true,
-        required: [true, "please enter password"],
-        minlength: [8, 'password must contain at least 8 characters'],
-        maxlength: [20, 'password too long'],
-        match: [
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
-            'Password must contain at least one uppercase letter, one lowercase letter, and one number, and be at least 8 characters long'
-        ]
+        type: String,
+        required: [true, "please enter password"]
     },
     class: {
         type: mongoose_1.Types.ObjectId,
         ref: 'Class',
-        required: true
-    }
+    },
+    grades: [gardeModel_js_1.GradeSchema]
 });
 exports.default = mongoose_1.default.model("Student", StudentSchema);

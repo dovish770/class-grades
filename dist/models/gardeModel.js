@@ -23,21 +23,26 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ClassSchema = void 0;
+exports.GradeSchema = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const ClassSchema = new mongoose_1.Schema({
-    name: {
+const GradeSchema = new mongoose_1.Schema({
+    subject: {
         type: String,
-        required: true,
-        minlength: 1,
-        maxlength: [20, 'class name too must contain not more then 20 characters'],
-        trim: true
+        required: [true, "subject is required"],
+        maxlength: [50, 'subject too long'],
+        match: [/^[a-zA-Z\s]+$/, 'invalid subject']
     },
-    students: {
-        type: [mongoose_1.Types.ObjectId],
-        ref: 'Student',
-        default: []
+    score: {
+        type: Number,
+        min: [0, 'Score must be at least 0'],
+        max: [100, 'Score must be at most 100'],
+        required: [true, 'please enter score']
+    },
+    comment: {
+        type: String,
+        required: [true, "please enter comment"],
+        maxlength: [100, "comment cant be bigger than 100 characters"]
     }
 });
-exports.ClassSchema = ClassSchema;
-exports.default = mongoose_1.default.model("Class", ClassSchema);
+exports.GradeSchema = GradeSchema;
+exports.default = mongoose_1.default.model("Grade", GradeSchema);
